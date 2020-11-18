@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <title>조회</title>
+</head>
+<body>
+
+<div>
+  <h2>조회조건</h2>
+</div>
+<div>
+  <input type="text" id="keyword" name="keyword">
+  <button name="searchBtn" th:onclick="search();">검색</button>
+</div>
+
+<div>
+  <h2>조회결과</h2>
+</div>
+<div>
+  <input type="text" id="id" name="id" />
+  <input type="text" id="name" name="name" />
+</div>
+</body>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#keyword").keypress(function(e){
+      if(e.which === 13) search();
+    })
+  });
+
+  function search(){
+    let url = '/search';
+    let data = {};
+    data.keyword = $('#keyword').val();
+    console.log(JSON.stringify(data));
+
+    $.ajax({
+      url: url,
+      contentType: 'application/json',
+      type: 'post',
+      dataType : 'json',
+      data : JSON.stringify(data),
+      success : function(rslt){
+        console.log(rslt);
+        $('#id').val(rslt.id);
+        $('#name').val(rslt.name);
+      },
+      error : function(xhr, status, error){
+        let rslt = xhr.responseJSON;
+        alert(rslt.msg);
+      }
+    });
+  }
+</script>
+</html>
